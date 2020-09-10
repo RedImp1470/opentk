@@ -164,16 +164,16 @@ namespace OpenTK.Windowing.Desktop
         }
 
         /// <inheritdoc />
-        public ContextAPI API { get; }
+        public ContextAPI API { get; private set; }
 
         /// <inheritdoc />
-        public ContextProfile Profile { get; }
+        public ContextProfile Profile { get; private set; }
 
         /// <inheritdoc />
-        public ContextFlags Flags { get; }
+        public ContextFlags Flags { get; private set; }
 
         /// <inheritdoc />
-        public Version APIVersion { get; }
+        public Version APIVersion { get; private set; }
 
         private readonly Monitor _currentMonitor;
 
@@ -521,9 +521,12 @@ namespace OpenTK.Windowing.Desktop
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+            API = settings.API;
 
             GLFW.WindowHint(WindowHintInt.ContextVersionMajor, settings.APIVersion.Major);
             GLFW.WindowHint(WindowHintInt.ContextVersionMinor, settings.APIVersion.Minor);
+
+            APIVersion = settings.APIVersion;
 
             if (settings.Flags.HasFlag(ContextFlags.ForwardCompatible))
             {
@@ -534,6 +537,8 @@ namespace OpenTK.Windowing.Desktop
             {
                 GLFW.WindowHint(WindowHintBool.OpenGLDebugContext, true);
             }
+
+            Flags = settings.Flags;
 
             switch (settings.Profile)
             {
@@ -549,6 +554,8 @@ namespace OpenTK.Windowing.Desktop
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+
+            Profile = settings.Profile;
 
             GLFW.WindowHint(WindowHintBool.Focused, settings.StartFocused);
             _windowBorder = settings.WindowBorder;
